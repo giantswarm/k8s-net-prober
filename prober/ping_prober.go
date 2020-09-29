@@ -86,7 +86,7 @@ func (p *PingProber) Start(ctx context.Context, collector chan types.ProbeResult
 			DstPodInfo:    *p.destination,
 			ProbeType:     probeType,
 			Success:       stats.PacketsRecv == stats.PacketsSent,
-			ProbeLengthMs: float64(stats.AvgRtt.Microseconds() / 1000),
+			ProbeLengthMs: float64(stats.AvgRtt.Microseconds()) / 1000.0,
 			Timestamp:     time.Now(),
 		}
 
