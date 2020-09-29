@@ -27,16 +27,16 @@ workflows:
             tags:
               only: /^v.*/
 
-#      # build and push helm chart to app catalog.
-#      - architect/push-to-app-catalog:
-#          name: push-azure-operator-to-control-plane-app-catalog
-#          app_catalog: "control-plane-catalog"
-#          app_catalog_test: "control-plane-test-catalog"
-#          chart: "azure-operator"
-#          # Make sure docker image is successfully built.
-#          requires:
-#            - push-azure-operator-to-quay
-#          filters:
-#            # Trigger the job also on git tag.
-#            tags:
-#              only: /^v.*/
+      # build and push helm chart to app catalog.
+      - architect/push-to-app-catalog:
+          name: push-to-default-app-catalog
+          app_catalog: "default-test-catalog"
+          app_catalog_test: "default-test-catalog"
+          chart: "k8s-net-prober"
+          # Make sure docker image is successfully built.
+          requires:
+            - push-azure-operator-to-quay
+          filters:
+            # Trigger the job also on git tag.
+            tags:
+              only: /^v.*/

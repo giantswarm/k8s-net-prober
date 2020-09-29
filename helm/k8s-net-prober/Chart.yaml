@@ -1,0 +1,6 @@
+name: k8s-net-prober
+version: [[ .Version ]]
+description: "K8s Net Prober checks networking in a kubernetes cluster"
+appVersion: "[[ .AppVersion ]]"
+home: "https://github.com/giantswarm/k8s-net-prober"
+apiVersion: v1

@@ -103,9 +103,7 @@ func mainError() error {
 			// Check if probe is already running or start it.
 			_, found := probers[d.IP]
 			if !found {
-				logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Starting new prober for %v", d))
 				go func(dest types.PodInfo) {
-					logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("I said starting new prober for %v", d))
 					pingProber, err := prober.NewPingProber(prober.PingProberConfig{
 						Logger:      logger,
 						ClusterID:   env.ClusterID(),

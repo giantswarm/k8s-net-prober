@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: k8s-net-prober
+  namespace: default
+  labels:
+    app: k8s-net-prober
+spec:
+  selector:
+    matchLabels:
+      name: k8s-net-prober
+  template:
+    metadata:
+      labels:
+        name: k8s-net-prober
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+        - name: k8s-net-prober
+          image: quay.io/giantswarm/k8s-net-prober:latest
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 0
+          env:
+            - name: CLUSTER_ID
+              value: "CHANGEME"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
