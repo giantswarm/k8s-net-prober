@@ -87,7 +87,10 @@ func mainError() error {
 		for {
 			destinations := <-destinationsWatcher
 
+			logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Received destinations: %v", destinations))
+
 			for _, d := range destinations {
+				logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Checking %s", d.IP))
 				// Check if probe is already running or start it.
 				_, found := probers[d.IP]
 				if !found {
