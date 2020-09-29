@@ -64,7 +64,12 @@ func mainError() error {
 	// Create channel to retrieve destinations.
 	destinationsWatcher := make(chan []types.PodInfo)
 
-	go w.Watch(ctx, destinationsWatcher) // nolint:errcheck
+	go func() {
+		err := w.Watch(ctx, destinationsWatcher)
+		if err != nil {
+			panic(fmt.Sprintf("%#v\n", err))
+		}
+	}()
 
 	logger.LogCtx(ctx, "level", "info", "message", "Initialized Watcher")
 
@@ -98,14 +103,22 @@ func mainError() error {
 
 					probers[d.IP] = pingProber
 
-					go pingProber.Start(ctx, ch) // nolint:errcheck
+					go func() {
+						err := pingProber.Start(ctx, ch)
+						if err != nil {
+							panic(fmt.Sprintf("%#v\n", err))
+						}
+					}()
 				}
 			}
 
 			// Check if any probe has to be stopped.
 			for d := range probers {
 				if !inSlice(d, destinations) {
-					probers[d].Stop(ctx) // nolint:errcheck
+					err := probers[d].Stop(ctx)
+					if err != nil {
+						panic(fmt.Sprintf("%#v\n", err))
+					}
 					delete(probers, d)
 				}
 			}
