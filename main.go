@@ -114,7 +114,7 @@ func mainError() error {
 						panic(fmt.Sprintf("%#v\n", err))
 					}
 
-					probers[d.IP] = pingProber
+					probers[dest.IP] = pingProber
 
 					err = pingProber.Start(ctx, ch)
 					if err != nil {
