@@ -84,54 +84,54 @@ func mainError() error {
 	}
 
 	go func() {
+		// Send all probe results to all persisters.
 		for {
-			destinations := <-destinationsWatcher
-
-			for _, d := range destinations {
-				// Check if probe is already running or start it.
-				_, found := probers[d.IP]
-				if !found {
-					go func(dest *types.PodInfo) {
-						pingProber, err := prober.NewPingProber(prober.PingProberConfig{
-							Logger:      logger,
-							ClusterID:   env.ClusterID(),
-							Source:      &source,
-							Destination: dest,
-						})
-						if err != nil {
-							panic(fmt.Sprintf("%#v\n", err))
-						}
-
-						probers[d.IP] = pingProber
-
-						err = pingProber.Start(ctx, ch)
-						if err != nil {
-							panic(fmt.Sprintf("%#v\n", err))
-						}
-					}(&d)
-				}
-			}
-
-			// Check if any probe has to be stopped.
-			for d := range probers {
-				if !inSlice(d, destinations) {
-					err := probers[d].Stop(ctx)
-					if err != nil {
-						panic(fmt.Sprintf("%#v\n", err))
-					}
-					delete(probers, d)
+			res := <-ch
+			for _, p := range persisters {
+				err = p.Persist(ctx, res)
+				if err != nil {
+					panic(fmt.Sprintf("%#v\n", err))
 				}
 			}
 		}
 	}()
 
-	// Send all probe results to all persisters.
 	for {
-		res := <-ch
-		for _, p := range persisters {
-			err = p.Persist(ctx, res)
-			if err != nil {
-				return microerror.Mask(err)
+		destinations := <-destinationsWatcher
+
+		for _, d := range destinations {
+			// Check if probe is already running or start it.
+			_, found := probers[d.IP]
+			if !found {
+				go func(dest *types.PodInfo) {
+					pingProber, err := prober.NewPingProber(prober.PingProberConfig{
+						Logger:      logger,
+						ClusterID:   env.ClusterID(),
+						Source:      &source,
+						Destination: dest,
+					})
+					if err != nil {
+						panic(fmt.Sprintf("%#v\n", err))
+					}
+
+					probers[d.IP] = pingProber
+
+					err = pingProber.Start(ctx, ch)
+					if err != nil {
+						panic(fmt.Sprintf("%#v\n", err))
+					}
+				}(&d)
+			}
+		}
+
+		// Check if any probe has to be stopped.
+		for d := range probers {
+			if !inSlice(d, destinations) {
+				err := probers[d].Stop(ctx)
+				if err != nil {
+					panic(fmt.Sprintf("%#v\n", err))
+				}
+				delete(probers, d)
 			}
 		}
 	}
