@@ -37,6 +37,8 @@ func mainError() error {
 		return microerror.Mask(err)
 	}
 
+	logger.LogCtx(ctx, "level", "info", "message", "Initializing Persisters")
+
 	// Init persisters.
 	var persisters []persister.Persister
 	{
@@ -49,6 +51,9 @@ func mainError() error {
 		persisters = append(persisters, logPersister)
 	}
 
+	logger.LogCtx(ctx, "level", "info", "message", "Initialized Persisters")
+	logger.LogCtx(ctx, "level", "info", "message", "Initializing Watcher")
+
 	w, err := watcher.NewWatcher(watcher.Config{
 		Logger: logger,
 	})
@@ -60,6 +65,8 @@ func mainError() error {
 	destinationsWatcher := make(chan []types.PodInfo)
 
 	go w.Watch(ctx, destinationsWatcher) // nolint:errcheck
+
+	logger.LogCtx(ctx, "level", "info", "message", "Initialized Watcher")
 
 	// Create channel to retrieve probe results from probers.
 	ch := make(chan types.ProbeResult)

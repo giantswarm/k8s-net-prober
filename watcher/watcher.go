@@ -24,6 +24,8 @@ type Config struct {
 
 type Interface struct {
 	logger micrologger.Logger
+
+	clientset *kubernetes.Clientset
 }
 
 func NewWatcher(config Config) (*Interface, error) {
@@ -31,14 +33,28 @@ func NewWatcher(config Config) (*Interface, error) {
 		return nil, microerror.Maskf(invalidConfigError, "%T.Logger must not be empty", config)
 	}
 
+	// setup configuration from env variables
+	cfg, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, microerror.Mask(err)
+	}
+
+	// create the clientset
+	clientset, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return nil, microerror.Mask(err)
+	}
+
 	return &Interface{
 		logger: config.Logger,
+
+		clientset: clientset,
 	}, nil
 }
 
 func (w *Interface) Watch(ctx context.Context, c chan []types.PodInfo) error {
 	for {
-		destinations, err := getPods(ctx)
+		destinations, err := w.getPods(ctx)
 		if err != nil {
 			return microerror.Mask(err)
 		}
@@ -49,20 +65,8 @@ func (w *Interface) Watch(ctx context.Context, c chan []types.PodInfo) error {
 	}
 }
 
-func getPods(ctx context.Context) ([]types.PodInfo, error) {
-	// setup configuration from env variables
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		return []types.PodInfo{}, microerror.Mask(err)
-	}
-
-	// create the clientset
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		return []types.PodInfo{}, microerror.Mask(err)
-	}
-
-	allPods, err := clientset.CoreV1().Pods(namespace).List(ctx, v1.ListOptions{})
+func (w *Interface) getPods(ctx context.Context) ([]types.PodInfo, error) {
+	allPods, err := w.clientset.CoreV1().Pods(namespace).List(ctx, v1.ListOptions{})
 	if err != nil {
 		return []types.PodInfo{}, microerror.Mask(err)
 	}
