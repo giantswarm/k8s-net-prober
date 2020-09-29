@@ -51,7 +51,7 @@ func mainError() error {
 	// Create channel to retrieve destinations.
 	destinationsWatcher := make(chan []types.PodInfo)
 
-	go w.Watch(ctx, destinationsWatcher)
+	go w.Watch(ctx, destinationsWatcher) // nolint:errcheck
 
 	// Create channel to retrieve probe results from probers.
 	ch := make(chan types.ProbeResult)
@@ -85,14 +85,14 @@ func mainError() error {
 
 					probers[d.IP] = pingProber
 
-					go pingProber.Start(ctx, ch)
+					go pingProber.Start(ctx, ch) // nolint:errcheck
 				}
 			}
 
 			// Check if any probe has to be stopped.
-			for d, _ := range probers {
+			for d := range probers {
 				if !inSlice(d, destinations) {
-					probers[d].Stop(ctx)
+					probers[d].Stop(ctx) // nolint:errcheck
 					delete(probers, d)
 				}
 			}
