@@ -91,12 +91,12 @@ func mainError() error {
 				// Check if probe is already running or start it.
 				_, found := probers[d.IP]
 				if !found {
-					go func() {
+					go func(dest *types.PodInfo) {
 						pingProber, err := prober.NewPingProber(prober.PingProberConfig{
 							Logger:      logger,
 							ClusterID:   env.ClusterID(),
 							Source:      &source,
-							Destination: &d,
+							Destination: dest,
 						})
 						if err != nil {
 							panic(fmt.Sprintf("%#v\n", err))
@@ -108,7 +108,7 @@ func mainError() error {
 						if err != nil {
 							panic(fmt.Sprintf("%#v\n", err))
 						}
-					}()
+					}(&d)
 				}
 			}
 
