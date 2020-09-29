@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
@@ -15,6 +16,13 @@ import (
 )
 
 func main() {
+	argsWithoutProg := os.Args[1:]
+
+	if len(argsWithoutProg) > 0 && argsWithoutProg[0] == "version" {
+		fmt.Println("1.0.0")
+		os.Exit(0)
+	}
+
 	err := mainError()
 	if err != nil {
 		panic(fmt.Sprintf("%#v\n", err))
