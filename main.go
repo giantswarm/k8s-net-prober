@@ -109,8 +109,6 @@ func mainError() error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func inSlice(needle string, haystack []types.PodInfo) bool {
