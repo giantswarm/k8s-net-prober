@@ -87,27 +87,24 @@ func mainError() error {
 		for {
 			destinations := <-destinationsWatcher
 
-			logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Received destinations: %v", destinations))
-
 			for _, d := range destinations {
-				logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Checking %s", d.IP))
 				// Check if probe is already running or start it.
 				_, found := probers[d.IP]
 				if !found {
-					pingProber, err := prober.NewPingProber(prober.PingProberConfig{
-						Logger:      logger,
-						ClusterID:   env.ClusterID(),
-						Source:      &source,
-						Destination: &d,
-					})
-					if err != nil {
-						panic(err)
-					}
-
-					probers[d.IP] = pingProber
-
 					go func() {
-						err := pingProber.Start(ctx, ch)
+						pingProber, err := prober.NewPingProber(prober.PingProberConfig{
+							Logger:      logger,
+							ClusterID:   env.ClusterID(),
+							Source:      &source,
+							Destination: &d,
+						})
+						if err != nil {
+							panic(fmt.Sprintf("%#v\n", err))
+						}
+
+						probers[d.IP] = pingProber
+
+						err = pingProber.Start(ctx, ch)
 						if err != nil {
 							panic(fmt.Sprintf("%#v\n", err))
 						}
