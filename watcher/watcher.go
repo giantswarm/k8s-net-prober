@@ -87,6 +87,7 @@ func (w *Interface) getPods(ctx context.Context) ([]types.PodInfo, error) {
 					IP:       p.Status.PodIP,
 					NodeName: p.Spec.NodeName,
 				})
+				break
 			}
 		}
 	}
