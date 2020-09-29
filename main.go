@@ -104,12 +104,13 @@ func mainError() error {
 			_, found := probers[d.IP]
 			if !found {
 				logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Starting new prober for %v", d))
-				go func(dest *types.PodInfo) {
+				go func(dest types.PodInfo) {
+					logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("I said starting new prober for %v", d))
 					pingProber, err := prober.NewPingProber(prober.PingProberConfig{
 						Logger:      logger,
 						ClusterID:   env.ClusterID(),
 						Source:      &source,
-						Destination: dest,
+						Destination: &dest,
 					})
 					if err != nil {
 						panic(fmt.Sprintf("%#v\n", err))
@@ -121,7 +122,7 @@ func mainError() error {
 					if err != nil {
 						panic(fmt.Sprintf("%#v\n", err))
 					}
-				}(&d)
+				}(d)
 			}
 		}
 
