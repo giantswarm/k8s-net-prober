@@ -3,9 +3,8 @@ package types
 import "time"
 
 type PodInfo struct {
-	IP       string  `json:"ip"`
-	NodePool *string `json:"node_pool"`
-	NodeName string  `json:"node_name"`
+	IP       string `json:"ip"`
+	NodeName string `json:"node_name"`
 }
 
 type ProbeResult struct {

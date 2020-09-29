@@ -73,11 +73,9 @@ func mainError() error {
 
 	probers := map[string]prober.Prober{}
 
-	// TODO populare src info.
 	source := types.PodInfo{
-		IP:       "",
-		NodePool: nil,
-		NodeName: "",
+		IP:       env.PodIP(),
+		NodeName: env.NodeName(),
 	}
 
 	go func() {

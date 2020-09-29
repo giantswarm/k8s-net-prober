@@ -2,6 +2,7 @@ package watcher
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/giantswarm/microerror"
@@ -73,6 +74,8 @@ func (w *Interface) getPods(ctx context.Context) ([]types.PodInfo, error) {
 
 	var filteredPods []types.PodInfo
 
+	w.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Found %d total pods in %s namespace", len(allPods.Items), namespace))
+
 	for _, p := range allPods.Items {
 		if p.Status.Phase != "Running" || p.Status.PodIP == "" {
 			// Pod not ready yet.
@@ -81,14 +84,14 @@ func (w *Interface) getPods(ctx context.Context) ([]types.PodInfo, error) {
 		for _, r := range p.ObjectMeta.OwnerReferences {
 			if r.Kind == "DaemonSet" && r.Name == daemonSetName {
 				filteredPods = append(filteredPods, types.PodInfo{
-					IP: p.Status.PodIP,
-					// TODO fill up node pool name.
-					NodePool: nil,
+					IP:       p.Status.PodIP,
 					NodeName: p.Spec.NodeName,
 				})
 			}
 		}
 	}
+
+	w.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("Found %d interesting pods in %s namespace", len(filteredPods), namespace))
 
 	return filteredPods, nil
 }
