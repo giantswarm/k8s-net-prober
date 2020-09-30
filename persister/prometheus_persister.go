@@ -77,13 +77,13 @@ func (p *PrometheusPersister) Init(ctx context.Context) error {
 }
 
 func (p *PrometheusPersister) Persist(ctx context.Context, result types.ProbeResult) error {
-	rttMetric.WithLabelValues(result.Cluster, result.SrcPodInfo.NodeName, result.DstPodInfo.NodeName, result.SrcPodInfo.IP, result.DstPodInfo.IP).Add(result.ProbeDurationMs)
+	rttMetric.WithLabelValues(result.Cluster, result.SrcPodInfo.NodeName, result.DstPodInfo.NodeName, result.SrcPodInfo.IP, result.DstPodInfo.IP).Set(result.ProbeDurationMs)
 
 	successInt := float64(0)
 	if result.Success {
 		successInt = 1
 	}
-	successFailureMetric.WithLabelValues(result.Cluster, result.SrcPodInfo.NodeName, result.DstPodInfo.NodeName, result.SrcPodInfo.IP, result.DstPodInfo.IP).Add(successInt)
+	successFailureMetric.WithLabelValues(result.Cluster, result.SrcPodInfo.NodeName, result.DstPodInfo.NodeName, result.SrcPodInfo.IP, result.DstPodInfo.IP).Set(successInt)
 
 	return nil
 }
