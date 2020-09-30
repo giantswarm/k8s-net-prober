@@ -49,6 +49,14 @@ func mainError() error {
 			return microerror.Mask(err)
 		}
 		persisters = append(persisters, logPersister)
+
+		prometheusPersister, err := persister.NewPrometheusPersister(persister.PrometheusPersisterConfig{
+			Logger: logger,
+		})
+		if err != nil {
+			return microerror.Mask(err)
+		}
+		persisters = append(persisters, prometheusPersister)
 	}
 
 	logger.LogCtx(ctx, "level", "info", "message", "Initialized Persisters")
