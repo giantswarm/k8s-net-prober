@@ -58,13 +58,21 @@ func mainError() error {
 		//}
 		//persisters = append(persisters, prometheusPersister)
 
-		graphitePersister, err := persister.NewGraphitePersister(persister.GraphitePersisterConfig{
+		//graphitePersister, err := persister.NewGraphitePersister(persister.GraphitePersisterConfig{
+		//	Logger: logger,
+		//})
+		//if err != nil {
+		//	return microerror.Mask(err)
+		//}
+		//persisters = append(persisters, graphitePersister)
+
+		postgresPersister, err := persister.NewPostgresPersister(persister.PostgresPersisterConfig{
 			Logger: logger,
 		})
 		if err != nil {
 			return microerror.Mask(err)
 		}
-		persisters = append(persisters, graphitePersister)
+		persisters = append(persisters, postgresPersister)
 	}
 
 	for _, p := range persisters {

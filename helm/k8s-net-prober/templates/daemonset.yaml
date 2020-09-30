@@ -36,3 +36,8 @@ spec:
                   fieldPath: spec.nodeName
             - name: PROMETHEUS_LISTEN_PORT
               value: "{{ .Values.prometheus.listenPort }}"
+            - name: POSTGRES_URL
+              valueFrom:
+                secretKeyRef:
+                  key: "postgres_url"
+                  name: "k8s-net-prober"

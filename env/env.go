@@ -9,6 +9,7 @@ const (
 	ClusterIDEnvVarName            = "CLUSTER_ID"
 	NodeNameEnvVarName             = "NODE_NAME"
 	PodIPEnvVarName                = "POD_IP"
+	PostgresURLEnvVar              = "POSTGRES_URL"
 	PrometheusListenPortEnvVarName = "PROMETHEUS_LISTEN_PORT"
 )
 
@@ -22,6 +23,10 @@ func NodeName() string {
 
 func PodIP() string {
 	return os.Getenv(PodIPEnvVarName)
+}
+
+func PostgresURL() string {
+	return os.Getenv(PostgresURLEnvVar)
 }
 
 func PrometheusListenPort() int {
