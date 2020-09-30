@@ -34,3 +34,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: PROMETHEUS_LISTEN_PORT
+              value: {{ .Values.prometheus.listenPort }}

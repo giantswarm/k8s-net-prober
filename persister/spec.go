@@ -7,5 +7,6 @@ import (
 )
 
 type Persister interface {
+	Init(ctx context.Context) error
 	Persist(ctx context.Context, result types.ProbeResult) error
 }

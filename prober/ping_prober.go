@@ -81,13 +81,13 @@ func (p *PingProber) Start(ctx context.Context, collector chan types.ProbeResult
 		stats := pinger.Statistics()
 
 		res := types.ProbeResult{
-			Cluster:       p.clusterID,
-			SrcPodInfo:    *p.source,
-			DstPodInfo:    *p.destination,
-			ProbeType:     probeType,
-			Success:       stats.PacketsRecv == stats.PacketsSent,
-			ProbeLengthMs: float64(stats.AvgRtt.Microseconds()) / 1000.0,
-			Timestamp:     time.Now(),
+			Cluster:         p.clusterID,
+			SrcPodInfo:      *p.source,
+			DstPodInfo:      *p.destination,
+			ProbeType:       probeType,
+			Success:         stats.PacketsRecv == stats.PacketsSent,
+			ProbeDurationMs: float64(stats.AvgRtt.Microseconds()) / 1000.0,
+			Timestamp:       time.Now(),
 		}
 
 		collector <- res

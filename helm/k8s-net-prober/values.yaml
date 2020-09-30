@@ -12,3 +12,6 @@ Installation:
 # clusterID is dynamic environment value, calculated after cluster creation
 # applies only to Giant Swarm clusters
 clusterID: "test-cluster"
+
+prometheus:
+  listenPort: 9339

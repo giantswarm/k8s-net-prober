@@ -1,11 +1,15 @@
 package env
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 const (
-	ClusterIDEnvVarName = "CLUSTER_ID"
-	NodeNameEnvVarName  = "NODE_NAME"
-	PodIPEnvVarName     = "POD_IP"
+	ClusterIDEnvVarName            = "CLUSTER_ID"
+	NodeNameEnvVarName             = "NODE_NAME"
+	PodIPEnvVarName                = "POD_IP"
+	PrometheusListenPortEnvVarName = "PROMETHEUS_LISTEN_PORT"
 )
 
 func ClusterID() string {
@@ -18,4 +22,14 @@ func NodeName() string {
 
 func PodIP() string {
 	return os.Getenv(PodIPEnvVarName)
+}
+
+func PrometheusListenPort() int {
+	str := os.Getenv(PrometheusListenPortEnvVarName)
+	i, err := strconv.Atoi(str)
+	if err != nil {
+		return 9339
+	}
+
+	return i
 }

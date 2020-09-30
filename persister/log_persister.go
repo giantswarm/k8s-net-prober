@@ -29,6 +29,10 @@ func NewLogPersister(config LogPersisterConfig) (*LogPersister, error) {
 	return &logPersister, nil
 }
 
+func (l *LogPersister) Init(ctx context.Context) error {
+	return nil
+}
+
 func (l *LogPersister) Persist(ctx context.Context, result types.ProbeResult) error {
 	l.logger.LogCtx(ctx, "level", "info", "message", result)
 	return nil
