@@ -59,6 +59,13 @@ func mainError() error {
 		persisters = append(persisters, prometheusPersister)
 	}
 
+	for _, p := range persisters {
+		err = p.Init(ctx)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+	}
+
 	logger.LogCtx(ctx, "level", "info", "message", "Initialized Persisters")
 	logger.LogCtx(ctx, "level", "info", "message", "Initializing Watcher")
 
