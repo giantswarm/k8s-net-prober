@@ -6,6 +6,7 @@ require (
 	github.com/giantswarm/microerror v0.2.1
 	github.com/giantswarm/micrologger v0.3.3
 	github.com/go-ping/ping v0.0.0-20200918120429-e8ae07c3cec8
+	github.com/marpaia/graphite-golang v0.0.0-20190519024811-caf161d2c2b1
 	github.com/prometheus/client_golang v1.7.1
 	k8s.io/apimachinery v0.18.9
 	k8s.io/client-go v0.18.9

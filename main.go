@@ -50,13 +50,21 @@ func mainError() error {
 		}
 		persisters = append(persisters, logPersister)
 
-		prometheusPersister, err := persister.NewPrometheusPersister(persister.PrometheusPersisterConfig{
+		//prometheusPersister, err := persister.NewPrometheusPersister(persister.PrometheusPersisterConfig{
+		//	Logger: logger,
+		//})
+		//if err != nil {
+		//	return microerror.Mask(err)
+		//}
+		//persisters = append(persisters, prometheusPersister)
+
+		graphitePersister, err := persister.NewGraphitePersister(persister.GraphitePersisterConfig{
 			Logger: logger,
 		})
 		if err != nil {
 			return microerror.Mask(err)
 		}
-		persisters = append(persisters, prometheusPersister)
+		persisters = append(persisters, graphitePersister)
 	}
 
 	for _, p := range persisters {
