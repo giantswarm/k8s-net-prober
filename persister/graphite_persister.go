@@ -45,16 +45,16 @@ func (p *GraphitePersister) Init(ctx context.Context) error {
 func (p *GraphitePersister) Persist(ctx context.Context, result types.ProbeResult) error {
 	label := fmt.Sprintf("clusters.%s.%s.%s", result.Cluster, result.SrcPodInfo.NodeName, result.DstPodInfo.NodeName)
 	if result.Success {
-		err := p.graphite.SimpleSend(label, "1")
+		err := p.graphite.SimpleSend(fmt.Sprintf("%s.success", label), "1")
 		if err != nil {
 			return microerror.Mask(err)
 		}
-		err = p.graphite.SimpleSend(label, fmt.Sprintf("%f", result.ProbeDurationMs))
+		err = p.graphite.SimpleSend(fmt.Sprintf("%s.duration", label), fmt.Sprintf("%f", result.ProbeDurationMs))
 		if err != nil {
 			return microerror.Mask(err)
 		}
 	} else {
-		err := p.graphite.SimpleSend(label, "0")
+		err := p.graphite.SimpleSend(fmt.Sprintf("%s.success", label), "0")
 		if err != nil {
 			return microerror.Mask(err)
 		}
