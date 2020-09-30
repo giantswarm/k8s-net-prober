@@ -33,7 +33,7 @@ func NewGraphitePersister(config GraphitePersisterConfig) (*GraphitePersister, e
 }
 
 func (p *GraphitePersister) Init(ctx context.Context) error {
-	graphiteClient, err := graphite.NewGraphite("graphite.azure.gigantic.io", 1234)
+	graphiteClient, err := graphite.NewGraphite("graphite.azure.gigantic.io", 2003)
 	if err != nil {
 		return microerror.Mask(err)
 	}
