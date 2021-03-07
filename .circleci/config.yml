@@ -1,5 +1,5 @@
 orbs:
-  architect: giantswarm/architect@0.10.1
+  architect: giantswarm/architect@2.2.0
 
 version: 2.1
 workflows:
@@ -16,7 +16,7 @@ workflows:
 
       # build and push docker image to quay.
       - architect/push-to-docker:
-          name: push-azure-operator-to-quay
+          name: push-k8s-net-prober-to-quay
           image: "quay.io/giantswarm/k8s-net-prober"
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
@@ -35,7 +35,7 @@ workflows:
           chart: "k8s-net-prober"
           # Make sure docker image is successfully built.
           requires:
-            - push-azure-operator-to-quay
+            - push-k8s-net-prober-to-quay
           filters:
             # Trigger the job also on git tag.
             tags:

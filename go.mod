@@ -13,3 +13,5 @@ require (
 	k8s.io/client-go v0.18.9
 	k8s.io/utils v0.0.0-20200912215256-4140de9c8800 // indirect
 )
+
+replace github.com/gorilla/websocket v0.0.0-20170926233335-4201258b820c => github.com/gorilla/websocket v1.4.2
